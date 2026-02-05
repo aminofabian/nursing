@@ -195,7 +195,7 @@ export default async function DashboardPage() {
           {/* Quick Actions */}
           <Card className="border-none shadow-sm">
             <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
+              <CardTitle>Quick Actions...</CardTitle>
               <CardDescription>
                 Jump right into your studies
               </CardDescription>
