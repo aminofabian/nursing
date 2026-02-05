@@ -34,4 +34,46 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# NurseHub
+
+Nursing resource platform for US nursing students. See [PROJECT_SCOPE.md](PROJECT_SCOPE.md) and [MILESTONES.md](MILESTONES.md) for full documentation.
+
+---
+
+## Git Remotes & Pushing
+
+This repo is configured with two remotes so you can push to your own GitHub and to the contributor repo:
+
+| Remote       | Repo                          | Use for                    |
+|-------------|-------------------------------|----------------------------|
+| **origin**  | `aminofabian/nursing`         | Your own GitHub repo       |
+| **nursingnclex** | [lettiphas/nursingnclex](https://github.com/lettiphas/nursingnclex) | Contributor repo (push your work there) |
+
+### Push to your repo only
+```bash
+git push origin main
+```
+
+### Push to the nursingnclex contributor repo only
+```bash
+git push nursingnclex main
+```
+
+### Push to both repos
+```bash
+git push origin main && git push nursingnclex main
+```
+
+### Check remotes
+```bash
+git remote -v
+```
+
+### Add a remote (if needed)
+```bash
+git remote add nursingnclex https://github.com/lettiphas/nursingnclex.git
+```
+
+---
+
 # nursing
