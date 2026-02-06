@@ -195,10 +195,10 @@ export default function HomePage() {
                   asChild
                   variant="outline"
                   size="lg"
-                  className="h-14 px-8 text-base font-semibold border-white/20 text-white hover:bg-white/10 backdrop-blur-sm"
+                  className="h-14 px-8 text-base font-semibold text-teal-300 border-2 border-teal-400 bg-white/5 hover:bg-teal-400/25 hover:border-teal-300 hover:text-white backdrop-blur-sm transition-all hover:scale-105"
                 >
-                  <Link href="/resources">
-                    <Play className="mr-2 size-5" />
+                  <Link href="/resources" className="flex items-center">
+                    <Play className="mr-2 size-5 shrink-0 text-current" />
                     Browse Resources
                   </Link>
                 </Button>
