@@ -141,7 +141,7 @@ export default async function ResourcesPage({
     <div className="container py-8 md:py-12">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold">Resources</h1>
+        <h1 className="text-3xl md:text-4xl font-bold">Resources...</h1>
         <p className="text-muted-foreground mt-2 max-w-2xl">
           Browse our comprehensive library of nursing study materials, practice exams,
           care plans, and more.
