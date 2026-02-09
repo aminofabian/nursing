@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import type { Prisma } from "@prisma/client"
 import { prisma } from "@/lib/prisma"
 import { requireAdmin } from "@/lib/admin"
 
@@ -13,7 +14,7 @@ export async function GET(request: NextRequest) {
     const role = searchParams.get("role")
     const search = searchParams.get("search")
 
-    const where: { role?: string; OR?: { name: { contains: string }; email: { contains: string } }[] } = {}
+    const where: Prisma.UserWhereInput = {}
     if (role && (role === "ADMIN" || role === "STUDENT")) {
       where.role = role
     }
