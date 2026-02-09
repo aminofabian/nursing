@@ -67,10 +67,10 @@ export async function generateMetadata({
 
   return {
     title: resource.title,
-    description: resource.description,
+    description: resource.description ?? undefined,
     openGraph: {
       title: resource.title,
-      description: resource.description,
+      description: resource.description ?? undefined,
       url,
       type: "article",
     },
