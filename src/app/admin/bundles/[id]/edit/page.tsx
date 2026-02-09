@@ -2,7 +2,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import { Button } from "@/components/ui/button"
-import { BundleForm } from "../bundle-form"
+import { BundleForm } from "../../bundle-form"
 import { ArrowLeft } from "lucide-react"
 
 export const metadata = {
