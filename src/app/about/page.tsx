@@ -1,12 +1,16 @@
+import type { Metadata } from "next"
 import { Stethoscope } from "lucide-react"
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { APP_NAME } from "@/lib/constants"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "About",
   description: `Learn about ${APP_NAME} - the nursing study resource platform built for students, by students.`,
+  alternates: {
+    canonical: "/about",
+  },
 }
 
 export default function AboutPage() {

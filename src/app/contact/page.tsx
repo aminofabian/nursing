@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Mail } from "lucide-react"
 import Link from "next/link"
 
@@ -8,9 +9,12 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { APP_NAME } from "@/lib/constants"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Contact",
   description: `Get in touch with the ${APP_NAME} team. We're here to help.`,
+  alternates: {
+    canonical: "/contact",
+  },
 }
 
 export default function ContactPage() {

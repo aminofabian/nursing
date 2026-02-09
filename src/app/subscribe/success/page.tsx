@@ -1,21 +1,21 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle2, Loader2, ArrowRight, BookOpen, Download, Sparkles } from "lucide-react"
-import confetti from "canvas-confetti"
 
 export default function SubscribeSuccessPage() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get("session_id")
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const confettiIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
-    // Trigger confetti on page load
+    // Lazy-load confetti and trigger on page load
     const duration = 3 * 1000
     const animationEnd = Date.now() + duration
     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 }
@@ -24,26 +24,30 @@ export default function SubscribeSuccessPage() {
       return Math.random() * (max - min) + min
     }
 
-    const interval: ReturnType<typeof setInterval> = setInterval(function () {
-      const timeLeft = animationEnd - Date.now()
+    void import("canvas-confetti").then(({ default: confetti }) => {
+      confettiIntervalRef.current = setInterval(function () {
+        const timeLeft = animationEnd - Date.now()
 
-      if (timeLeft <= 0) {
-        return clearInterval(interval)
-      }
+        if (timeLeft <= 0 && confettiIntervalRef.current) {
+          clearInterval(confettiIntervalRef.current)
+          confettiIntervalRef.current = null
+          return
+        }
 
-      const particleCount = 50 * (timeLeft / duration)
+        const particleCount = 50 * (timeLeft / duration)
 
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-      })
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-      })
-    }, 250)
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+        })
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        })
+      }, 250)
+    })
 
     // Verify the session
     if (sessionId) {
@@ -52,7 +56,11 @@ export default function SubscribeSuccessPage() {
       setLoading(false)
     }
 
-    return () => clearInterval(interval)
+    return () => {
+      if (confettiIntervalRef.current) {
+        clearInterval(confettiIntervalRef.current)
+      }
+    }
   }, [sessionId])
 
   const verifySession = async (id: string) => {

@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
 import {
   Menu,
@@ -12,6 +13,7 @@ import {
   LogOut,
   LayoutDashboard,
   Crown,
+  Search,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -36,8 +38,19 @@ const navLinks = [
 ] as const
 
 export function Header() {
+  const router = useRouter()
   const { data: session, status } = useSession()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    const q = searchQuery.trim()
+    if (q) {
+      router.push(`/search?q=${encodeURIComponent(q)}`)
+      setMobileOpen(false)
+    }
+  }
 
   const initials = session?.user?.name
     ?.split(" ")
@@ -69,12 +82,23 @@ export function Header() {
           </Link>
 
           {/* Desktop navigation - center */}
-          <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center max-w-xl mx-4">
+            <form onSubmit={handleSearch} className="relative w-full max-w-xs">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <input
+                type="search"
+                placeholder="Search resources..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-9 pl-9 pr-4 rounded-lg border border-input bg-background text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label="Search resources"
+              />
+            </form>
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="relative px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors rounded-lg hover:bg-foreground/5"
+                className="relative px-4 py-2 text-sm font-medium text-foreground/70 hover:text-foreground transition-colors rounded-lg hover:bg-foreground/5 whitespace-nowrap"
               >
                 {link.label}
               </Link>
@@ -202,6 +226,17 @@ export function Header() {
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 top-16 z-50 bg-background/98 backdrop-blur-sm animate-fade-in">
           <nav className="container py-8 flex flex-col gap-2">
+            <form onSubmit={handleSearch} className="relative mb-4 px-4">
+              <Search className="absolute left-7 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
+              <input
+                type="search"
+                placeholder="Search resources..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full h-11 pl-10 pr-4 rounded-xl border border-input bg-background text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                aria-label="Search resources"
+              />
+            </form>
             {navLinks.map((link, index) => (
               <Link
                 key={link.href}

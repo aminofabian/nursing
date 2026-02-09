@@ -1,11 +1,15 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { APP_NAME } from "@/lib/constants"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Terms of Service",
   description: `Terms of Service for ${APP_NAME}.`,
+  alternates: {
+    canonical: "/terms",
+  },
 }
 
 export default function TermsPage() {

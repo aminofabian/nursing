@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import {
@@ -21,7 +22,7 @@ import {
 
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
-import { RESOURCE_TYPES } from "@/lib/constants"
+import { APP_URL, RESOURCE_TYPES } from "@/lib/constants"
 import { formatDistanceToNow } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -33,7 +34,6 @@ import {
 } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import type { Metadata } from "next"
 
 const iconMap: Record<string, React.FC<{ className?: string }>> = {
   BookOpen,
@@ -51,7 +51,7 @@ export async function generateMetadata({
 }: {
   params: PageParams
 }): Promise<Metadata> {
-  const { slug } = await params
+  const { type, slug } = await params
   const resource = await prisma.resource.findUnique({
     where: { slug },
     select: { title: true, description: true },
@@ -61,9 +61,22 @@ export async function generateMetadata({
     return { title: "Resource Not Found" }
   }
 
+  const base = APP_URL.replace(/\/$/, "")
+  const path = `/resources/${type}/${slug}`
+  const url = `${base}${path}`
+
   return {
     title: resource.title,
     description: resource.description,
+    openGraph: {
+      title: resource.title,
+      description: resource.description,
+      url,
+      type: "article",
+    },
+    alternates: {
+      canonical: path,
+    },
   }
 }
 

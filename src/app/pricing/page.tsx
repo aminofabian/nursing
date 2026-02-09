@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { Check } from "lucide-react"
 
@@ -11,10 +12,13 @@ import {
   formatPrice,
 } from "@/lib/constants"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Pricing",
   description:
     "Simple, transparent pricing for nursing study resources. Subscribe for unlimited access or purchase individual resources.",
+  alternates: {
+    canonical: "/pricing",
+  },
 }
 
 export default function PricingPage() {

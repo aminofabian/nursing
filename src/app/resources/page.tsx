@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import {
   Search,
@@ -36,9 +37,12 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Resources",
   description: "Browse nursing study resources, practice exams, care plans, and more",
+  alternates: {
+    canonical: "/resources",
+  },
 }
 
 const iconMap: Record<string, React.FC<{ className?: string }>> = {
@@ -73,8 +77,8 @@ async function getResources(searchParams: {
 
   if (searchParams.search) {
     where.OR = [
-      { title: { contains: searchParams.search, mode: "insensitive" } },
-      { description: { contains: searchParams.search, mode: "insensitive" } },
+      { title: { contains: searchParams.search } },
+      { description: { contains: searchParams.search } },
     ]
   }
 

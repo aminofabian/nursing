@@ -3,6 +3,7 @@ import { headers } from "next/headers"
 import Stripe from "stripe"
 import { stripe, constructWebhookEvent } from "@/lib/stripe"
 import { prisma } from "@/lib/prisma"
+import { sendSubscriptionConfirmationEmail, sendPurchaseReceiptEmail } from "@/lib/email"
 
 // Disable body parsing for webhook signature verification
 export const dynamic = "force-dynamic"
@@ -130,6 +131,28 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         endsAt: new Date(periodEnd * 1000),
       },
     })
+
+    // Send subscription confirmation email (best-effort)
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { name: true, email: true },
+      })
+
+      if (user?.email) {
+        const plan = getPlanFromPriceId(subscriptionItem?.price.id)
+        const normalizedPlan: "monthly" | "yearly" =
+          plan === "YEARLY" ? "yearly" : "monthly"
+
+        await sendSubscriptionConfirmationEmail({
+          name: user.name,
+          email: user.email,
+          plan: normalizedPlan,
+        })
+      }
+    } catch (err) {
+      console.error("Failed to send subscription confirmation email:", err)
+    }
   }
 
   // If this is a resource purchase, create purchase record
@@ -137,7 +160,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
     const resourceId = session.metadata.resourceId
     const paymentIntentId = session.payment_intent as string
 
-    await prisma.purchase.create({
+    const purchase = await prisma.purchase.create({
       data: {
         userId,
         resourceId,
@@ -146,7 +169,34 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         stripePaymentId: paymentIntentId,
         stripeSessionId: session.id,
       },
+      include: {
+        resource: {
+          select: {
+            title: true,
+          },
+        },
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
     })
+
+    // Send purchase receipt email (best-effort)
+    if (purchase.user?.email && purchase.resource?.title) {
+      try {
+        await sendPurchaseReceiptEmail({
+          name: purchase.user.name,
+          email: purchase.user.email,
+          resourceTitle: purchase.resource.title,
+          amountCents: purchase.amount,
+        })
+      } catch (err) {
+        console.error("Failed to send purchase receipt email:", err)
+      }
+    }
   }
 
   console.log(`Checkout completed for user ${userId}`)

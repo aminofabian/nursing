@@ -1,7 +1,33 @@
 import { PrismaClient, ResourceType, UserRole } from "@prisma/client";
+import { PrismaLibSql } from "@prisma/adapter-libsql";
 import bcrypt from "bcryptjs";
 
-const prisma = new PrismaClient();
+// Use the same Turso/libSQL configuration as the app
+function createPrismaClient() {
+  const tursoUrl = process.env.TURSO_DATABASE_URL;
+  const authToken = process.env.TURSO_AUTH_TOKEN;
+
+  let url: string;
+  if (tursoUrl && tursoUrl.startsWith("libsql://")) {
+    url = tursoUrl;
+    console.log("[Seed] Using TURSO remote database");
+  } else {
+    url = "file:prisma/dev.db";
+    console.log("[Seed] FALLBACK to local SQLite dev.db - TURSO_DATABASE_URL was:", tursoUrl);
+  }
+
+  const adapter = new PrismaLibSql({
+    url,
+    authToken: tursoUrl?.startsWith("libsql://") ? authToken : undefined,
+  });
+
+  return new PrismaClient({
+    adapter,
+    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+  });
+}
+
+const prisma = createPrismaClient();
 
 async function main() {
   console.log("🌱 Seeding database...");
@@ -9,10 +35,10 @@ async function main() {
   // Create admin user
   const adminPassword = await bcrypt.hash("admin123", 12);
   const admin = await prisma.user.upsert({
-    where: { email: "admin@nursehub.com" },
+    where: { email: "aminofab@gmail.com" },
     update: {},
     create: {
-      email: "admin@nursehub.com",
+      email: "aminofab@gmail.com",
       name: "Admin",
       passwordHash: adminPassword,
       role: UserRole.ADMIN,
