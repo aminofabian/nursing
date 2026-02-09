@@ -19,8 +19,9 @@ export default function OpenGraphImage() {
           width: "100%",
           alignItems: "center",
           justifyContent: "center",
-          background:
-            "radial-gradient(circle at top left, #22c55e33, transparent 60%), radial-gradient(circle at bottom right, #3b82f633, transparent 60%), #020617",
+          backgroundColor: "#020617",
+          backgroundImage:
+            "radial-gradient(circle at top left, #22c55e33, transparent 60%), radial-gradient(circle at bottom right, #3b82f633, transparent 60%)",
           color: "#f9fafb",
           fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
         }}
@@ -33,7 +34,7 @@ export default function OpenGraphImage() {
             padding: "48px 64px",
             borderRadius: "32px",
             border: "1px solid rgba(148, 163, 184, 0.6)",
-            background:
+            backgroundImage:
               "linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.9))",
             boxShadow:
               "0 40px 80px rgba(15, 23, 42, 0.8), 0 0 0 1px rgba(15, 23, 42, 0.9)",
