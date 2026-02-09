@@ -71,6 +71,7 @@ model User {
   purchases      Purchase[]
   downloads      Download[]
   savedResources SavedResource[]
+  passwordResetTokens PasswordResetToken[]
 
   @@map("users")
 }
@@ -244,4 +245,19 @@ model SavedResource {
   @@unique([userId, resourceId])
   @@index([userId])
   @@map("saved_resources")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  token     String   @unique
+  expiresAt DateTime @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("password_reset_tokens")
 }

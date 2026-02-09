@@ -461,7 +461,7 @@
 - [x] Set up email provider (Resend/SendGrid)
 - [x] Welcome email on registration
 - [x] Purchase confirmation email
-- [ ] Password reset flow
+- [x] Password reset flow
 - [ ] New resource notifications
 - [ ] Weekly digest (optional)
 

@@ -146,4 +146,52 @@ export async function sendPurchaseReceiptEmail(params: {
   })
 }
 
+export async function sendPasswordResetEmail(params: {
+  name: string | null
+  email: string
+  token: string
+}) {
+  if (!resend || !RESEND_FROM_EMAIL) return
+
+  const firstName = params.name?.split(" ")[0] ?? "there"
+  const appUrl = APP_URL.replace(/\/$/, "")
+  const resetUrl = `${appUrl}/reset-password?token=${encodeURIComponent(params.token)}`
+
+  await resend.emails.send({
+    from: `${APP_NAME} <${RESEND_FROM_EMAIL}>`,
+    to: params.email,
+    subject: `Reset your ${APP_NAME} password`,
+    text: [
+      `Hi ${firstName},`,
+      "",
+      `We received a request to reset your ${APP_NAME} password.`,
+      "",
+      `You can set a new password using this link:`,
+      resetUrl,
+      "",
+      "If you did not request a password reset, you can safely ignore this email.",
+      "",
+      "For security reasons, this link will expire in 1 hour.",
+      "",
+      `— The ${APP_NAME} team`,
+    ].join("\n"),
+    html: `
+      <div style="font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; line-height: 1.6; color: #111827;">
+        <h1 style="font-size: 24px; margin-bottom: 8px;">Reset your password</h1>
+        <p>Hi ${firstName},</p>
+        <p>We received a request to reset your <strong>${APP_NAME}</strong> password.</p>
+        <p>
+          <a href="${resetUrl}" style="display:inline-block;padding:10px 16px;border-radius:9999px;background:#0f766e;color:#ecfeff;text-decoration:none;font-weight:600;">
+            Set a new password
+          </a>
+        </p>
+        <p style="margin-top: 8px;">If you did not request this, you can safely ignore this email.</p>
+        <p style="font-size: 14px; color: #6b7280; margin-top: 16px;">
+          For security reasons, this link will expire in 1 hour.
+        </p>
+      </div>
+    `,
+  })
+}
+
 

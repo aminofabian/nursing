@@ -1,19 +1,20 @@
 import type { Metadata } from "next"
 
-import { ForgotPasswordForm } from "./forgot-password-form"
 import { APP_NAME } from "@/lib/constants"
+import { ResetPasswordForm } from "./reset-password-form"
 
 export const metadata: Metadata = {
-  title: "Forgot Password",
-  description: `Reset your ${APP_NAME} password.`,
+  title: "Reset Password",
+  description: `Choose a new ${APP_NAME} password.`,
 }
 
-export default function ForgotPasswordPage() {
+export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <ForgotPasswordForm />
+        <ResetPasswordForm />
       </div>
     </div>
   )
 }
+
